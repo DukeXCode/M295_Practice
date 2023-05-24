@@ -4,6 +4,7 @@ use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use \App\Models\Bike;
+use \App\Http\Controllers\BookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('/responder') -> group(function () {
+Route::prefix('/responder')->group(function () {
     Route::get('/hi', function () {
         return 'Hello World';
     });
@@ -38,7 +39,7 @@ Route::prefix('/responder') -> group(function () {
     });
 
     Route::get('/icon', function () {
-        return response() -> download(public_path() . '/favicon.ico');
+        return response()->download(public_path() . '/favicon.ico');
     });
 
     Route::get('/weather', function () {
@@ -57,7 +58,7 @@ Route::prefix('/responder') -> group(function () {
 
     Route::get('/multiply/{number1}/{number2}', function ($number1, $number2) {
         return $number1 * $number2;
-    }) -> where(['number1' => '[0-9]+', 'number2' => '[0-9]+']);
+    })->where(['number1' => '[0-9]+', 'number2' => '[0-9]+']);
 });
 
 Route::get('/bikes', function () {
@@ -66,18 +67,24 @@ Route::get('/bikes', function () {
 
 Route::get('/bikes/{id}', function ($id) {
     $pdo = new PDO('mysql:host=localhost;dbname=aufgaben', 'root', '');
-    $statement = $pdo -> prepare('SELECT * FROM bikes WHERE id = :id');
-    $statement -> bindParam(':id', $id);
-    $statement -> execute();
-    return $statement -> fetchAll(PDO::FETCH_ASSOC);
-}) -> where(['id' => '[0-9]+']);
+    $statement = $pdo->prepare('SELECT * FROM bikes WHERE id = :id');
+    $statement->bindParam(':id', $id);
+    $statement->execute();
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
+})->where(['id' => '[0-9]+']);
 
-Route::prefix('/bookler') -> group(function () {
-    Route::get('/books', function () {
-        return Book::all();
+Route::prefix('/bookler')->group(function () {
+    Route::get('/books', [BookController::class, 'getAll']);
+    Route::get('/books/{id}', [BookController::class, 'findById'])->where(['id' => '[0-9]+']);
+    Route::prefix('/book-finder')->group(function () {
+        Route::get('/slug/{slug}', [BookController::class, 'findBySlug']);
+        Route::get('year/{year}', [BookController::class, 'findByYear']);
+        Route::get('max-pages/{maxPages}', [BookController::class, 'findByMaxPages']);
     });
-
-    Route::get('/books/{id}', function (int $id){
-      return Book::all()->find($id);
-    })->where(['id' => '[0-9]+']);
+    Route::get('/search/{search}', [BookController::class, 'findBySearchTerm']);
+    Route::prefix('/meta')->group(function () {
+        Route::get('/count', [BookController::class, 'getNumberOfBooks']);
+        Route::get('/avg-pages', [BookController::class, 'getAvgPages']);
+    });
+    Route::get('/dashboard', [BookController::class, 'getDashboard']);
 });
