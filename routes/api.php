@@ -1,7 +1,9 @@
 <?php
 
+use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use \App\Models\Bike;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,10 +61,7 @@ Route::prefix('/responder') -> group(function () {
 });
 
 Route::get('/bikes', function () {
-    $pdo = new PDO('mysql:host=localhost;dbname=aufgaben', 'root', '');
-    $statement = $pdo -> prepare('SELECT * FROM bikes');
-    $statement -> execute();
-    return $statement -> fetchAll(PDO::FETCH_ASSOC);
+    return Bike::all();
 });
 
 Route::get('/bikes/{id}', function ($id) {
@@ -72,3 +71,13 @@ Route::get('/bikes/{id}', function ($id) {
     $statement -> execute();
     return $statement -> fetchAll(PDO::FETCH_ASSOC);
 }) -> where(['id' => '[0-9]+']);
+
+Route::prefix('/bookler') -> group(function () {
+    Route::get('/books', function () {
+        return Book::all();
+    });
+
+    Route::get('/books/{id}', function (int $id){
+      return Book::all()->find($id);
+    })->where(['id' => '[0-9]+']);
+});
