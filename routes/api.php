@@ -1,10 +1,11 @@
 <?php
 
-use App\Models\Book;
+use App\Http\Controllers\BookController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\TopicController;
+use App\Models\Bike;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use \App\Models\Bike;
-use \App\Http\Controllers\BookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,4 +88,9 @@ Route::prefix('/bookler')->group(function () {
         Route::get('/avg-pages', [BookController::class, 'getAvgPages']);
     });
     Route::get('/dashboard', [BookController::class, 'getDashboard']);
+});
+
+Route::prefix('/relationsheep')->group(function () {
+    Route::get('/posts', [PostController::class, 'getAll']);
+    Route::get('/slug/{slug}/posts', [TopicController::class, 'getPostsForSlug']);
 });
