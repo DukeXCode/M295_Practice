@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Farm;
+use App\Models\Plant;
+use Database\Factories\PlantFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,11 +14,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        Plant::create([
+            'name' => 'onion',
+            'slug' => 'onion',
+            'description' => 'perfect',
+            'stock' => '64'
+        ]);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        Farm::create([
+            'name' => 'MegaFarm',
+            'slug' => 'megafarm',
+            'description' => 'the best farm',
+            'address' => 'Farmstr. 1',
+            'city' => 'farmtown',
+            'zip' => '3910',
+            'plant_id' => 1
+        ]);
     }
 }

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\FarmController;
+use App\Http\Controllers\PlantController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\TopicController;
 use App\Models\Bike;
@@ -93,4 +95,9 @@ Route::prefix('/bookler')->group(function () {
 Route::prefix('/relationsheep')->group(function () {
     Route::get('/posts', [PostController::class, 'getAll']);
     Route::get('/slug/{slug}/posts', [TopicController::class, 'getPostsForSlug']);
+});
+
+Route::prefix('/ackerer')->group(function () {
+   Route::get('/plants', [PlantController::class, 'getAll']);
+   Route::get('/farms', [FarmController::class, 'getAll']);
 });
