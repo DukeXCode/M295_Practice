@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\ClownController;
 use App\Http\Controllers\FarmController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PlantController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\TopicController;
@@ -100,4 +103,26 @@ Route::prefix('/relationsheep')->group(function () {
 Route::prefix('/ackerer')->group(function () {
    Route::get('/plants', [PlantController::class, 'getAll']);
    Route::get('/farms', [FarmController::class, 'getAll']);
+});
+
+Route::prefix('/k-rest-y')->group(function () {
+    Route::get('/clowns', [ClownController::class, 'getAll']);
+    Route::get('/clowns/{id}/{name}', [ClownController::class, 'setName']);
+});
+
+Route::prefix('/digispot')->group(function () {
+    Route::get('/orders', [OrderController::class, 'getAll']);
+    Route::post('/orders', [OrderController::class, 'postOrder']);
+    Route::delete('/orders/{id}', [OrderController::class, 'delete']);
+    Route::put('/orders/{id}', [OrderController::class, 'put']);
+});
+
+Route::prefix('/guardener')->group(function () {
+    Route::post('/login', [LoginController::class, 'authenticate']);
+    Route::get('/geheim', function () {
+        return ["location" => "Ebikonerstrasse 75, Adligenswil"];
+    })->middleware('auth:sanctum');
+    Route::get('/auth', function () {
+        return true;
+    })->middleware('auth:sanctum');
 });
